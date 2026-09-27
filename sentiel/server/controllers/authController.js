@@ -111,7 +111,7 @@ const loginUser = async (req, res) => {
     res.cookie("token", accessToken, {
       httpOnly: true, // Js ვერასდროს წაიკითხავს ამ cookieს
       secure: process.env.NODE_ENV === "production", // true იქნება მხოლოდ httpsზე
-      sameSite: "strict", // იცავს CSRF შეტევებისგან
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // იცავს CSRF შეტევებისგან
       maxAge: 15 * 60 * 1000, //ქ cookieს არსებობა მილიწამებში
     });
 
@@ -133,9 +133,9 @@ const loginUser = async (req, res) => {
 const logoutUser = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
-  });
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+});
 
   return res.status(200).json({ message: "logged out successfully" });
 };
@@ -198,48 +198,48 @@ const googleLogin = passport.authenticate("google", {
 });
 
 const googleAuthCallback = (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({
-        message: "Authentication failed"
-      });
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                message: "Authentication failed"
+            });
+        }
+
+        const accessToken = jwt.sign(
+            {
+                id: req.user._id,
+                role: req.user.role
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "15m"
+            }
+        );
+
+        res.cookie("token", accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 15 * 60 * 1000
+        });
+
+        if (req.user.role === "admin") {
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/admin`
+            );
+        }
+
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/dashboard`
+        );
+
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).json({
+            message: "invalid server"
+        });
     }
-
-    const accessToken = jwt.sign(
-      {
-        id: req.user._id,
-        role: req.user.role
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "15m"
-      }
-    );
-
-    res.cookie("token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
-    });
-
-    if (req.user.role === "admin") {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/admin`
-      );
-    }
-
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/dashboard`
-    );
-
-  } catch (err) {
-    console.log(err);
-
-    return res.status(500).json({
-      message: "invalid server"
-    });
-  }
 };
 
 module.exports = {
