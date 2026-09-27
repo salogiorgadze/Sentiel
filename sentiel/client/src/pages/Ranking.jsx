@@ -11,7 +11,7 @@ const Ranking = () => {
   useEffect(() => {
     const getRanking = async () => {
       try {
-        const response = await api.get("/student-projects/ranking");
+        const response = await api.get("/api/student-projects/ranking");
         setRanking(response.data);
       } catch (err) {
         console.log("GET RANKING ERROR:", err);
