@@ -18,7 +18,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getNotifications = async () => {
       try {
-        const response = await api.get("/notifications");
+        const response = await api.get("/api/notifications");
         setNotifications(response.data);
       } catch (err) {
         console.log("GET NOTIFICATIONS ERROR:", err);
@@ -34,7 +34,7 @@ const Dashboard = () => {
 
 const markAsRead = async (id) => {
   try {
-    await api.patch(`/notifications/${id}/read`);
+    await api.patch(`/api/notifications/${id}/read`);
 
     setNotifications((prev) =>
       prev.map((notification) =>
@@ -50,7 +50,7 @@ const markAsRead = async (id) => {
 
 const markAllAsRead = async () => {
   try {
-    await api.patch("/notifications/read-all");
+    await api.patch("/api/notifications/read-all");
 
     setNotifications((prev) =>
       prev.map((notification) => ({
@@ -66,15 +66,15 @@ const markAllAsRead = async () => {
   useEffect(() => {
     const getDashboardData = async () => {
       try {
-        const studentResponse = await api.get("/auth/me");
+        const studentResponse = await api.get("/api/auth/me");
 
         const student = studentResponse.data;
 
         setStudent(student);
 
         const [tasksResponse, projectsResponse] = await Promise.all([
-          api.get("/student/tasks"),
-          api.get(`/student-projects/student/${student._id}`),
+          api.get("/api/student/tasks"),
+          api.get(`/api/student-projects/student/${student._id}`),
         ]);
 
         setTasks(tasksResponse.data);
@@ -118,7 +118,7 @@ const markAllAsRead = async () => {
 
   const handleLogout = async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post("/api/auth/logout");
 
       toast.success("Logged out successfully!");
 
