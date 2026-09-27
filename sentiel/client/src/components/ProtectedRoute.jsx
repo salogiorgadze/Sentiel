@@ -9,14 +9,24 @@ const ProtectedRoute = ({ children, role }) => {
   useEffect(() => {
     const getMe = async () => {
       try {
-        const response = await api.get("/auth/me");
-        setUser(response.data);
-      } catch (err) {
-        console.log("GET ME ERROR:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
+    console.log("GETTING ME...");
+
+    const response = await api.get("/api/auth/me");
+
+    console.log("GET ME SUCCESS:", response.status);
+    console.log("GET ME USER:", response.data);
+
+    setUser(response.data);
+} catch (err) {
+    console.log("GET ME ERROR:", err);
+    console.log("STATUS:", err.response?.status);
+    console.log("DATA:", err.response?.data);
+    console.log("URL:", err.config?.url);
+
+    setUser(null);
+} finally {
+    setLoading(false);
+}
     };
 
     getMe();
