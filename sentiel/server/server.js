@@ -34,16 +34,16 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // ჩვენი მომავალი React/Vite ფრონტენდის მისამართი
+        origin: "https://sentiel-app.vercel.app",
         methods: ["GET", "POST", "PATCH"],
-        credentials: true // ნება დართოს cookieების გაცვლას სოკეტის დროსაც
+        credentials: true
     }
 });
 
 connectDB();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://sentiel-app.vercel.app',
     credentials: true
 }));
 

@@ -121,7 +121,7 @@ const Profile = () => {
 
                 {student.profilePicture ? (
                   <img
-                    src={`http://localhost:5001${student.profilePicture}`}
+                    src={`https://sentiel-app.onrender.com${student.profilePicture}`}
                     alt={student.fullname}
                     className='h-full w-full object-cover'
                   />

@@ -12,7 +12,7 @@ function VerifyEmail() {
 
         try {
             const response = await fetch(
-                "http://localhost:5001/api/auth/verify-email",
+                "https://sentiel-app.onrender.com/api/auth/verify-email",
                 {
                     method: "POST",
                     headers: {

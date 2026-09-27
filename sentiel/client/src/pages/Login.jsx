@@ -115,8 +115,7 @@ const Login = () => {
             <button
               type="button"
               onClick={() => {
-                console.log("GOOGLE BUTTON CLICKED");
-                window.location.href = "http://localhost:5001/api/auth/google";
+                window.location.href = 'https://sentiel-app.onrender.com/api/auth/google';;
               }}
               className="w-full bg-white text-gray-800 font-bold p-3 rounded mt-4"
             >
