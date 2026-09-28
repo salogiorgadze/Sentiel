@@ -26,71 +26,84 @@ transporter.verify((error, success) => {
 });
 
 const registerUser = async (req, res) => {
-  try {
-    const { fullname, email, password } = req.body;
 
-    console.log("1. REGISTER START");
+    console.log("🔥 REGISTER CONTROLLER REACHED");
 
-    const isExist = await User.findOne({ email });
+    try {
+        const { fullname, email, password } = req.body;
 
-    console.log("2. USER CHECKED");
+        console.log("1. REGISTER START");
 
-    if (isExist) {
-      return res.status(400).json({ message: "user already exists" });
+        const isExist = await User.findOne({ email });
+
+        console.log("2. USER CHECKED");
+
+        if (isExist) {
+            return res.status(400).json({
+                message: "user already exists"
+            });
+        }
+
+        const emailDomain = email.split("@")[1].toLowerCase();
+
+        const isDisponsable = disposableDomains.some(
+            (domain) =>
+                emailDomain === domain ||
+                emailDomain.endsWith("." + domain)
+        );
+
+        console.log("3. EMAIL VALIDATED");
+
+        if (isDisponsable) {
+            return res.status(400).json({
+                message: "email can't be used"
+            });
+        }
+
+        const verificationCode =
+            Math.floor(100000 + Math.random() * 900000);
+
+        const newUser = new User({
+            fullname,
+            email,
+            password,
+            isVerified: false,
+            verificationCode,
+            verificationCodeExpires: Date.now() + 15 * 60 * 1000,
+        });
+
+        await newUser.save();
+
+        console.log("4. USER SAVED");
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Verification code",
+            html: `
+                <h3>Hello ${fullname},</h3>
+                <p>Your Verification code: <b>${verificationCode}</b></p>
+            `,
+        };
+
+        console.log("5. BEFORE SEND MAIL");
+
+        await transporter.sendMail(mailOptions);
+
+        console.log("6. MAIL SENT");
+
+        return res.status(201).json({
+            message: "User registered successfully",
+        });
+
+    } catch (err) {
+
+        console.log("❌ REGISTER ERROR:", err);
+
+        return res.status(500).json({
+            message: "invalid server"
+        });
     }
-
-    const emailDomain = email.split("@")[1].toLowerCase();
-
-    const isDisponsable = disposableDomains.some(
-      (domain) =>
-        emailDomain === domain ||
-        emailDomain.endsWith("." + domain)
-    );
-
-    console.log("3. EMAIL VALIDATED");
-
-    if (isDisponsable) {
-      return res.status(400).json({ message: "email can't be used" });
-    }
-
-    const verificationCode =
-      Math.floor(100000 + Math.random() * 900000);
-
-    const newUser = new User({
-      fullname,
-      email,
-      password,
-      isVerified: false,
-      verificationCode,
-      verificationCodeExpires: Date.now() + 15 * 60 * 1000,
-    });
-
-    await newUser.save();
-
-    console.log("4. USER SAVED");
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Verification code",
-      html: `<h3>Hello ${fullname},</h3>
-             <p>Your Verification code: <b>${verificationCode}</b></p>`,
-    };
-
-    console.log("5. BEFORE SEND MAIL");
-
-    await transporter.sendMail(mailOptions);
-
-    console.log("6. MAIL SENT");
-
-    return res.status(201).json({
-      message: "User registered successfully",
-    });
-
-  } catch (err) {
-    console.log("REGISTER ERROR:", err);
-    res.status(500).json({ message: "invalid server" });
-  }
 };
 
 const loginUser = async (req, res) => {
