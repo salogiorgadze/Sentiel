@@ -34,8 +34,8 @@ const StudentProfile = () => {
     const getStudent = async () => {
       try {
         const [studentResponse, projectsResponse] = await Promise.all([
-          api.get(`/admin/students/${studentId}`),
-          api.get(`/student-projects/student/${studentId}`),
+          api.get(`/api/admin/students/${studentId}`),
+          api.get(`/api/student-projects/student/${studentId}`),
         ]);
 
         setStudent(studentResponse.data.student);
@@ -118,7 +118,7 @@ const StudentProfile = () => {
 
     try {
       const response = await api.post(
-        `/student-projects/student/${studentId}`,
+        `/api/student-projects/student/${studentId}`,
         {
           title: projectForm.title,
           score: Number(projectForm.score),
@@ -145,7 +145,7 @@ const StudentProfile = () => {
   const deleteProject = async (projectId) => {
     try {
       await api.delete(
-        `/student-projects/${projectId}`
+        `/api/student-projects/${projectId}`
       );
 
       setProjects((prev) =>

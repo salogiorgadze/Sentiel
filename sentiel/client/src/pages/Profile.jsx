@@ -22,7 +22,7 @@ const Profile = () => {
         setStudent(user);
 
         const projectsResponse = await api.get(
-          `/student-projects/student/${user._id}`
+          `/api/student-projects/student/${user._id}`
         );
 
         setProjects(projectsResponse.data);
