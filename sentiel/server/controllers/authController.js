@@ -86,15 +86,26 @@ const registerUser = async (req, res) => {
             `,
         };
 
-        console.log("5. BEFORE SEND MAIL");
+console.log("5. BEFORE SEND MAIL");
 
-        await transporter.sendMail(mailOptions);
+try {
+    const info = await transporter.sendMail(mailOptions);
 
-        console.log("6. MAIL SENT");
+    console.log("6. MAIL SENT:", info.messageId);
 
-        return res.status(201).json({
-            message: "User registered successfully",
-        });
+} catch (err) {
+    console.log("❌ MAIL ERROR:", err);
+    console.log("❌ MESSAGE:", err.message);
+    console.log("❌ CODE:", err.code);
+
+    return res.status(500).json({
+        message: "email sending failed"
+    });
+}
+
+return res.status(201).json({
+    message: "User registered successfully",
+});
 
     } catch (err) {
 
