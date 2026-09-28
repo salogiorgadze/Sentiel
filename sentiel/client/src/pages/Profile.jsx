@@ -15,7 +15,7 @@ const Profile = () => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const userResponse = await api.get('/auth/me');
+        const userResponse = await api.get('/api/auth/me');
 
         const user = userResponse.data;
 
