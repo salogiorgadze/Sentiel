@@ -51,7 +51,7 @@ const Profile = () => {
       setUploading(true);
 
       const response = await api.patch(
-        '/auth/profile-picture',
+        '/api/auth/profile-picture',
         formData
       );
 
