@@ -200,14 +200,6 @@ const Exams = () => {
 
                   {/* Actions */}
                   <div className="mt-6 flex gap-2 border-t border-black/5 pt-5">
-                    <button
-                      onClick={() =>
-                        navigate(`/admin/exams/${exam._id}`)
-                      }
-                      className="flex-1 rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#568253]"
-                    >
-                      View
-                    </button>
 
                     <button
                       onClick={() => handleDelete(exam._id)}
