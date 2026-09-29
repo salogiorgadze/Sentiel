@@ -264,7 +264,7 @@ const CreateExam = () => {
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#f3f4ef] font-bold text-[#568253]">
                           {student.profilePicture ? (
                             <img
-                              src={`https://sentiel-app.onrender.com${student.profilePicture}`}
+                              src={student.profilePicture}
                               alt={student.fullname}
                               className="h-full w-full object-cover"
                             />

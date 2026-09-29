@@ -101,7 +101,7 @@ const AdminDashboard = () => {
                   <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-[#f3f4ef] font-bold text-[#568253]">
                     {student.profilePicture ? (
                       <img
-                        src={`https://sentiel-app.onrender.com${student.profilePicture}`}
+                        src={student.profilePicture}
                         alt={student.fullname}
                         className="h-full w-full object-cover"
                       />

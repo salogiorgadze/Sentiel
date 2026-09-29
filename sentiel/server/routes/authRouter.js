@@ -45,7 +45,7 @@ authRouter.get(
   googleAuthCallback
 );
 authRouter.patch(
-  '/profile-picture',
+  "/profile-picture",
   protect,
   upload.single("profilePicture"),
   async (req, res) => {
@@ -64,7 +64,8 @@ authRouter.patch(
         });
       }
 
-      user.profilePicture = `/uploads/profile/${req.file.filename}`;
+      // Cloudinary URL
+      user.profilePicture = req.file.path;
 
       await user.save();
 

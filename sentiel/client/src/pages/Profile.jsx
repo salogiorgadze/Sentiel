@@ -121,10 +121,10 @@ const Profile = () => {
 
                 {student.profilePicture ? (
                   <img
-                    src={`https://sentiel-app.onrender.com${student.profilePicture}`}
-                    alt={student.fullname}
-                    className='h-full w-full object-cover'
-                  />
+  src={student.profilePicture}
+  alt={student.fullname}
+  className="h-full w-full object-cover"
+/>
                 ) : (
                   student.fullname
                     ?.charAt(0)
