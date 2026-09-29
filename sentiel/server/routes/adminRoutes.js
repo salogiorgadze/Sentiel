@@ -89,7 +89,9 @@ adminRouter.post(
         type: "task",
       });
 
-      await sendTaskEmail(student, task);
+            sendTaskEmail(student, task).catch((err) =>
+        console.error("TASK EMAIL ERROR:", err.message)
+      );
 
       res.status(201).json({
         message: "Task created successfully",

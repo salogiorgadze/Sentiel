@@ -14,8 +14,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StudentProfile from "./pages/StudentProfile";
 import Ranking from "./pages/Ranking";
-
-import {ToastContainer} from 'react-toastify';
+import CreateExam from "./pages/admin/CreateExam";
+import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
 
 const App = () => {
@@ -60,9 +60,22 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/exams/create" element={<CreateExam />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} pauseOnHover theme="light"/>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="light"
+      />
     </Router>
   );
 };

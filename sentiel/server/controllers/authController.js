@@ -1,33 +1,15 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const disposableDomains = require("disposable-email-domains");
-const nodemailer = require("nodemailer");
 const passport = require("passport");
 
-console.log("EMAIL USER EXISTS:", !!process.env.EMAIL_USER);
-console.log("EMAIL PASSWORD EXISTS:", !!process.env.EMAIL_PASSWORD);
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+const sendMail = require("../utils/mailer");
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("EMAIL ERROR:", error);
-  } else {
-    console.log("EMAIL SERVER IS READY");
-  }
-});
 
 const registerUser = async (req, res) => {
 
-    console.log("🔥 REGISTER CONTROLLER REACHED");
+    console.log("REGISTER CONTROLLER REACHED");
 
     try {
         const { fullname, email, password } = req.body;
@@ -76,41 +58,29 @@ const registerUser = async (req, res) => {
 
         console.log("4. USER SAVED");
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Verification code",
-            html: `
-                <h3>Hello ${fullname},</h3>
-                <p>Your Verification code: <b>${verificationCode}</b></p>
-            `,
-        };
+        try {
+            await sendMail({
+                to: email,
+                subject: "Verification code",
+                html: `
+                    <h3>Hello ${fullname},</h3>
+                    <p>Your Verification code: <b>${verificationCode}</b></p>
+                `,
+            });
+        } catch (err) {
+            console.log("MAIL ERROR:", err.message);
+            await User.deleteOne({ _id: newUser._id });
 
-console.log("5. BEFORE SEND MAIL");
-
-try {
-    const info = await transporter.sendMail(mailOptions);
-
-    console.log("6. MAIL SENT:", info.messageId);
-
-} catch (err) {
-    console.log("❌ MAIL ERROR:", err);
-    console.log("❌ MESSAGE:", err.message);
-    console.log("❌ CODE:", err.code);
-
-    return res.status(500).json({
-        message: "email sending failed"
-    });
-}
+            return res.status(500).json({
+                message: "email sending failed"
+            });
+        }
 
 return res.status(201).json({
     message: "User registered successfully",
 });
 
     } catch (err) {
-
-        console.log("❌ REGISTER ERROR:", err);
-
         return res.status(500).json({
             message: "invalid server"
         });

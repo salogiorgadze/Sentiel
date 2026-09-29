@@ -21,6 +21,8 @@ const studentTaskRouter = require('./routes/studentTaskRoutes');
 const studentRouter = require('./routes/studentRoutes');
 const studentProjectRouter = require('./routes/studentProjectRoutes');
 const notificationRouter = require('./routes/notificationRoutes');
+const examRouter = require('./routes/examRoutes');
+const studentExamRouter = require('./routes/studentExamRoutes');
 
 
 
@@ -60,6 +62,8 @@ app.use('/api/student', studentRouter);
 app.use('/api/student-projects', studentProjectRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/notifications', notificationRouter);
+app.use("/api/exams", examRouter);
+app.use('/api/student-exams', studentExamRouter);
 
 app.get('/api/health', (req, res) => {
     res.json({status: 'ok', message: 'Santiel works'})
