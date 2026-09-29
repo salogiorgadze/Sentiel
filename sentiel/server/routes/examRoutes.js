@@ -1,4 +1,5 @@
 const express = require("express");
+
 const protect = require("../middlewares/authMiddleware");
 const adminOnly = require("../middlewares/adminMiddleware");
 

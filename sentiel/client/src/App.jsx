@@ -17,6 +17,7 @@ import Ranking from "./pages/Ranking";
 import CreateExam from "./pages/admin/CreateExam";
 import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
+import Exams from "./pages/admin/Exams";
 
 const App = () => {
   return (
@@ -69,6 +70,7 @@ const App = () => {
           }
         />
         <Route path="/admin/exams/create" element={<CreateExam />} />
+        <Route path="/admin/exams" element={<Exams />} />
       </Routes>
       <ToastContainer
         position="top-right"

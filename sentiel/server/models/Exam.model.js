@@ -18,24 +18,9 @@ const examSchema = new mongoose.Schema(
       default: [],
     },
 
-    startDate: {
+    date: {
       type: Date,
       required: true,
-    },
-
-    endDate: {
-      type: Date,
-      required: true,
-    },
-
-    duration: {
-      type: Number,
-      required: true,
-    },
-
-    maxScore: {
-      type: Number,
-      default: 100,
     },
 
     students: [
@@ -45,38 +30,10 @@ const examSchema = new mongoose.Schema(
       },
     ],
 
-    questions: [
-      {
-        question: {
-          type: String,
-          required: true,
-        },
-
-        type: {
-          type: String,
-          enum: ["multiple-choice", "text"],
-          default: "text",
-        },
-
-        options: {
-          type: [String],
-          default: [],
-        },
-
-        correctAnswer: {
-          type: String,
-        },
-
-        points: {
-          type: Number,
-          default: 1,
-        },
-      },
-    ],
-
-    isPublished: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["upcoming", "completed"],
+      default: "upcoming",
     },
   },
   {

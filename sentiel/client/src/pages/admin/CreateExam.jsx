@@ -12,33 +12,19 @@ const CreateExam = () => {
     title: "",
     description: "",
     topics: "",
-    startDate: "",
-    endDate: "",
-    duration: 60,
-    maxScore: 100,
+    date: "",
   });
 
   const [selectedStudents, setSelectedStudents] = useState([]);
-
-  const [questions, setQuestions] = useState([
-    {
-      question: "",
-      type: "text",
-      options: [],
-      correctAnswer: "",
-      points: 1,
-    },
-  ]);
 
   // სტუდენტების წამოღება
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await api.get("/api/admin/students");
-
         setStudents(response.data);
       } catch (error) {
-        console.error("Failed to fetch students:", error);
+        console.error("FAILED TO FETCH STUDENTS:", error);
       } finally {
         setLoading(false);
       }
@@ -47,7 +33,7 @@ const CreateExam = () => {
     fetchStudents();
   }, []);
 
-  // ჩვეულებრივი input-ების შეცვლა
+  // input-ების შეცვლა
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -57,7 +43,7 @@ const CreateExam = () => {
     }));
   };
 
-  // სტუდენტის არჩევა/მოხსნა
+  // სტუდენტის არჩევა / მოხსნა
   const toggleStudent = (studentId) => {
     setSelectedStudents((prev) => {
       if (prev.includes(studentId)) {
@@ -68,61 +54,28 @@ const CreateExam = () => {
     });
   };
 
-  // კითხვის შეცვლა
-  const updateQuestion = (index, field, value) => {
-    setQuestions((prev) =>
-      prev.map((question, i) =>
-        i === index
-          ? {
-              ...question,
-              [field]: value,
-            }
-          : question
-      )
-    );
-  };
-
-  // ახალი კითხვის დამატება
-  const addQuestion = () => {
-    setQuestions((prev) => [
-      ...prev,
-      {
-        question: "",
-        type: "text",
-        options: [],
-        correctAnswer: "",
-        points: 1,
-      },
-    ]);
-  };
-
-  // კითხვის წაშლა
-  const removeQuestion = (index) => {
-    setQuestions((prev) => prev.filter((_, i) => i !== index));
-  };
-
   // გამოცდის შექმნა
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (selectedStudents.length === 0) {
+      alert("Select at least one student");
+      return;
+    }
+
     try {
       const examData = {
-        ...form,
+        title: form.title,
+        description: form.description,
 
         topics: form.topics
           .split(",")
           .map((topic) => topic.trim())
           .filter(Boolean),
 
-        duration: Number(form.duration),
-        maxScore: Number(form.maxScore),
+        date: form.date,
 
         students: selectedStudents,
-
-        questions: questions.map((question) => ({
-          ...question,
-          points: Number(question.points),
-        })),
       };
 
       await api.post("/api/exams", examData);
@@ -161,7 +114,7 @@ const CreateExam = () => {
             name="title"
             value={form.title}
             onChange={handleChange}
-            placeholder="September JavaScript Exam"
+            placeholder="September Monthly Exam"
             required
           />
         </div>
@@ -173,7 +126,7 @@ const CreateExam = () => {
             name="description"
             value={form.description}
             onChange={handleChange}
-            placeholder="Exam description..."
+            placeholder="Monthly evaluation..."
           />
         </div>
 
@@ -185,7 +138,7 @@ const CreateExam = () => {
             name="topics"
             value={form.topics}
             onChange={handleChange}
-            placeholder="JavaScript, React, CSS"
+            placeholder="JavaScript, React, Backend"
           />
 
           <small>
@@ -193,54 +146,16 @@ const CreateExam = () => {
           </small>
         </div>
 
-        {/* DATES */}
+        {/* DATE */}
 
         <div>
-          <label>Start date</label>
+          <label>Exam date & time</label>
 
           <input
             type="datetime-local"
-            name="startDate"
-            value={form.startDate}
+            name="date"
+            value={form.date}
             onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>End date</label>
-
-          <input
-            type="datetime-local"
-            name="endDate"
-            value={form.endDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Duration (minutes)</label>
-
-          <input
-            type="number"
-            name="duration"
-            value={form.duration}
-            onChange={handleChange}
-            min="1"
-            required
-          />
-        </div>
-
-        <div>
-          <label>Maximum score</label>
-
-          <input
-            type="number"
-            name="maxScore"
-            value={form.maxScore}
-            onChange={handleChange}
-            min="1"
             required
           />
         </div>
@@ -277,121 +192,6 @@ const CreateExam = () => {
               </label>
             ))
           )}
-        </div>
-
-        {/* QUESTIONS */}
-
-        <div>
-          <h2>Questions</h2>
-
-          {questions.map((question, index) => (
-            <div
-              key={index}
-              style={{
-                border: "1px solid #ddd",
-                padding: "20px",
-                marginBottom: "15px",
-              }}
-            >
-              <h3>Question {index + 1}</h3>
-
-              <textarea
-                value={question.question}
-                onChange={(e) =>
-                  updateQuestion(
-                    index,
-                    "question",
-                    e.target.value
-                  )
-                }
-                placeholder="Write the question..."
-                required
-              />
-
-              <select
-                value={question.type}
-                onChange={(e) =>
-                  updateQuestion(
-                    index,
-                    "type",
-                    e.target.value
-                  )
-                }
-              >
-                <option value="text">
-                  Text answer
-                </option>
-
-                <option value="multiple-choice">
-                  Multiple choice
-                </option>
-              </select>
-
-              {question.type === "multiple-choice" && (
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Option 1, Option 2, Option 3..."
-                    value={question.options.join(", ")}
-                    onChange={(e) =>
-                      updateQuestion(
-                        index,
-                        "options",
-                        e.target.value
-                          .split(",")
-                          .map((option) => option.trim())
-                          .filter(Boolean)
-                      )
-                    }
-                  />
-                </div>
-              )}
-
-              <input
-                type="text"
-                placeholder="Correct answer"
-                value={question.correctAnswer}
-                onChange={(e) =>
-                  updateQuestion(
-                    index,
-                    "correctAnswer",
-                    e.target.value
-                  )
-                }
-                required
-              />
-
-              <input
-                type="number"
-                min="1"
-                placeholder="Points"
-                value={question.points}
-                onChange={(e) =>
-                  updateQuestion(
-                    index,
-                    "points",
-                    e.target.value
-                  )
-                }
-              />
-
-              {questions.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeQuestion(index)}
-                >
-                  Remove question
-                </button>
-              )}
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={addQuestion}
-          >
-            + Add question
-          </button>
         </div>
 
         <br />
