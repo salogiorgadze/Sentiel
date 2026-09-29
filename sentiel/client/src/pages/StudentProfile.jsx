@@ -88,7 +88,7 @@ const StudentProfile = () => {
   const completeTask = async (taskId) => {
     try {
       const response = await api.patch(
-        `/admin/tasks/${taskId}/complete`
+        `/api/admin/tasks/${taskId}/complete`
       );
 
       setTasks((prevTasks) =>
