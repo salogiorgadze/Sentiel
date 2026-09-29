@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const getStudents = async () => {
       try {
-        const response = await api.get("/admin/students");
+        const response = await api.get("/api/admin/students");
         setStudents(response.data);
       } catch (err) {
         console.log("GET STUDENTS ERROR:", err);
