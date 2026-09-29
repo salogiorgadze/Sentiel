@@ -210,17 +210,6 @@ const Exams = () => {
                     </button>
 
                     <button
-                      onClick={() =>
-                        navigate(
-                          `/admin/exams/${exam._id}/edit`
-                        )
-                      }
-                      className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-semibold text-[#171717] transition hover:bg-[#f3f4ef]"
-                    >
-                      Edit
-                    </button>
-
-                    <button
                       onClick={() => handleDelete(exam._id)}
                       className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100"
                     >
