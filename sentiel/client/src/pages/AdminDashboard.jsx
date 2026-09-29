@@ -65,14 +65,21 @@ const AdminDashboard = () => {
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-5">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold">Students</h2>
 
-            <p className="text-sm text-black/50 mt-1">
+            <p className="mt-1 text-sm text-black/50">
               Select a student to manage their progress.
             </p>
           </div>
+
+          <button
+            onClick={() => navigate("/admin/exams/create")}
+            className="rounded-xl bg-[#568253] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#79b176] hover:text-black"
+          >
+            + Add Exam
+          </button>
         </div>
 
         {students.length === 0 ? (

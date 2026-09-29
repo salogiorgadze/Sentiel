@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
+  const [exams, setExams] = useState([]);
 
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -29,39 +30,39 @@ const Dashboard = () => {
   }, []);
 
   const unreadCount = notifications.filter(
-  (notification) => !notification.isRead
-).length;
+    (notification) => !notification.isRead,
+  ).length;
 
-const markAsRead = async (id) => {
-  try {
-    await api.patch(`/api/notifications/${id}/read`);
+  const markAsRead = async (id) => {
+    try {
+      await api.patch(`/api/notifications/${id}/read`);
 
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification._id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
-  } catch (err) {
-    console.log("MARK NOTIFICATION ERROR:", err);
-  }
-};
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          notification._id === id
+            ? { ...notification, isRead: true }
+            : notification,
+        ),
+      );
+    } catch (err) {
+      console.log("MARK NOTIFICATION ERROR:", err);
+    }
+  };
 
-const markAllAsRead = async () => {
-  try {
-    await api.patch("/api/notifications/read-all");
+  const markAllAsRead = async () => {
+    try {
+      await api.patch("/api/notifications/read-all");
 
-    setNotifications((prev) =>
-      prev.map((notification) => ({
-        ...notification,
-        isRead: true,
-      }))
-    );
-  } catch (err) {
-    console.log("MARK ALL NOTIFICATIONS ERROR:", err);
-  }
-};
+      setNotifications((prev) =>
+        prev.map((notification) => ({
+          ...notification,
+          isRead: true,
+        })),
+      );
+    } catch (err) {
+      console.log("MARK ALL NOTIFICATIONS ERROR:", err);
+    }
+  };
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -72,13 +73,16 @@ const markAllAsRead = async () => {
 
         setStudent(student);
 
-        const [tasksResponse, projectsResponse] = await Promise.all([
-          api.get("/api/student/tasks"),
-          api.get(`/api/student-projects/student/${student._id}`),
-        ]);
+        const [tasksResponse, projectsResponse, examsResponse] =
+          await Promise.all([
+            api.get("/api/student/tasks"),
+            api.get(`/api/student-projects/student/${student._id}`),
+            api.get("/api/student-exams"),
+          ]);
 
         setTasks(tasksResponse.data);
         setProjects(projectsResponse.data);
+        setExams(examsResponse.data);
       } catch (err) {
         console.log("DASHBOARD ERROR:", err);
         console.log("DATA:", err.response?.data);
@@ -171,85 +175,76 @@ const markAllAsRead = async () => {
               Log out
             </button>
             <div className="relative">
-  <button
-    onClick={() =>
-      setShowNotifications((prev) => !prev)
-    }
-    className="relative flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-xl transition hover:bg-gray-50"
-  >
-    ♥︎
+              <button
+                onClick={() => setShowNotifications((prev) => !prev)}
+                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-xl transition hover:bg-gray-50"
+              >
+                ♥︎
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#568253] px-1 text-[10px] font-bold text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
 
-    {unreadCount > 0 && (
-      <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#568253] px-1 text-[10px] font-bold text-white">
-        {unreadCount}
-      </span>
-    )}
-  </button>
+              {showNotifications && (
+                <div className="absolute right-0 top-14 z-50 w-80 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl">
+                  <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
+                    <h3 className="font-bold">Notifications</h3>
 
-  {showNotifications && (
-    <div className="absolute right-0 top-14 z-50 w-80 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl">
-      <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
-        <h3 className="font-bold">
-          Notifications
-        </h3>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={markAllAsRead}
+                        className="text-xs font-semibold text-[#568253] hover:underline"
+                      >
+                        Mark all as read
+                      </button>
+                    )}
+                  </div>
 
-        {unreadCount > 0 && (
-          <button
-            onClick={markAllAsRead}
-            className="text-xs font-semibold text-[#568253] hover:underline"
-          >
-            Mark all as read
-          </button>
-        )}
-      </div>
+                  <div className="max-h-96 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="px-4 py-8 text-center text-sm text-gray-400">
+                        No notifications
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <button
+                          key={notification._id}
+                          onClick={() =>
+                            !notification.isRead && markAsRead(notification._id)
+                          }
+                          className={`w-full border-b border-black/5 px-4 py-4 text-left transition hover:bg-gray-50 ${
+                            !notification.isRead ? "bg-[#f3f7f2]" : "bg-white"
+                          }`}
+                        >
+                          <div className="flex gap-3">
+                            <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#568253]" />
 
-      <div className="max-h-96 overflow-y-auto">
-        {notifications.length === 0 ? (
-          <div className="px-4 py-8 text-center text-sm text-gray-400">
-            No notifications
-          </div>
-        ) : (
-          notifications.map((notification) => (
-            <button
-              key={notification._id}
-              onClick={() =>
-                !notification.isRead &&
-                markAsRead(notification._id)
-              }
-              className={`w-full border-b border-black/5 px-4 py-4 text-left transition hover:bg-gray-50 ${
-                !notification.isRead
-                  ? "bg-[#f3f7f2]"
-                  : "bg-white"
-              }`}
-            >
-              <div className="flex gap-3">
-                <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#568253]" />
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-[#171717]">
+                                {notification.title}
+                              </p>
 
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-[#171717]">
-                    {notification.title}
-                  </p>
+                              <p className="mt-1 text-xs text-gray-500">
+                                {notification.message}
+                              </p>
 
-                  <p className="mt-1 text-xs text-gray-500">
-                    {notification.message}
-                  </p>
-
-                  <p className="mt-2 text-[10px] text-gray-400">
-                    {new Date(
-                      notification.createdAt
-                    ).toLocaleString()}
-                  </p>
+                              <p className="mt-2 text-[10px] text-gray-400">
+                                {new Date(
+                                  notification.createdAt,
+                                ).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))
-        )}
-      </div>
-    </div>
-  )}
-</div>
+              )}
+            </div>
           </div>
-          
         </header>
 
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -405,6 +400,118 @@ const markAllAsRead = async () => {
               </div>
             )}
           </section>
+          <section className="mt-8 rounded-3xl border border-black/5 bg-white p-6 shadow-sm md:p-8">
+  <div className="mb-7 flex items-center justify-between">
+    <div>
+      <p className="text-xs font-bold uppercase tracking-widest text-[#568253]">
+        Monthly Exams
+      </p>
+
+      <h2 className="mt-1 text-2xl font-bold">
+        My Exams
+      </h2>
+
+      <p className="mt-1 text-sm text-gray-500">
+        Your upcoming and completed exams.
+      </p>
+    </div>
+
+    <span className="rounded-full bg-[#f3f4ef] px-3 py-1 text-xs font-semibold text-gray-600">
+      {exams.length} total
+    </span>
+  </div>
+
+  {exams.length === 0 ? (
+    <div className="rounded-2xl bg-[#f8f8f5] p-8 text-center">
+      <p className="font-medium text-gray-600">
+        No exams yet
+      </p>
+
+      <p className="mt-1 text-sm text-gray-400">
+        Your exams will appear here when they are assigned to you.
+      </p>
+    </div>
+  ) : (
+    <div className="space-y-4">
+      {exams.map((exam) => {
+        const examDate = new Date(exam.date);
+        const isPast = examDate < new Date();
+
+        return (
+          <div
+            key={exam._id}
+            className="rounded-2xl border border-black/5 bg-[#fafaf8] p-5 transition hover:bg-white hover:shadow-sm"
+          >
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-[#171717]">
+                  {exam.title}
+                </h3>
+
+                {exam.description && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    {exam.description}
+                  </p>
+                )}
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="rounded-lg bg-[#f3f4ef] px-3 py-1.5 text-xs font-semibold text-[#568253]">
+                    📅 {examDate.toLocaleString()}
+                  </span>
+
+                  <span
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${
+                      isPast
+                        ? "bg-gray-100 text-gray-600"
+                        : "bg-green-50 text-green-700"
+                    }`}
+                  >
+                    {isPast ? "Completed" : "Upcoming"}
+                  </span>
+                </div>
+
+                {exam.topics?.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      Topics
+                    </p>
+
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {exam.topics.map((topic, index) => (
+                        <span
+                          key={index}
+                          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs text-gray-600"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {exam.result && (
+                <div className="rounded-2xl bg-[#568253] px-5 py-4 text-white md:min-w-37.5">
+                  <p className="text-xs text-white/70">
+                    Result
+                  </p>
+
+                  <p className="mt-1 text-2xl font-bold">
+                    {exam.result.score}/{exam.result.maxScore}
+                  </p>
+
+                  <p className="mt-1 text-xs font-semibold">
+                    {exam.result.status}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+</section>
           <section className="rounded-3xl border border-black/5 bg-white p-6 shadow-sm md:p-8">
             <div className="mb-7">
               <p className="text-xs font-bold uppercase tracking-widest text-[#568253]">
