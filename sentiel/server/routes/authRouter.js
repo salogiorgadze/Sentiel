@@ -45,7 +45,7 @@ authRouter.get(
   googleAuthCallback
 );
 authRouter.patch(
-  '/api/profile-picture',
+  '/profile-picture',
   protect,
   upload.single("profilePicture"),
   async (req, res) => {
