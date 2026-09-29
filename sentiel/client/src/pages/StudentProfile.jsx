@@ -64,7 +64,7 @@ const StudentProfile = () => {
 
     try {
       const response = await api.post(
-        `/admin/students/${studentId}/tasks`,
+        `/api/admin/students/${studentId}/tasks`,
         form
       );
 
