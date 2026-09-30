@@ -65,7 +65,7 @@ function VerifyEmail() {
               Check your inbox
             </p>
             <p className="mb-3 text-xs text-gray-500">
-                We sent a 6-digit code to <span className="text-black font-bold">salome.giorgadze0511@gmail.com.</span> It expires in 10 minutes.
+                We sent a 6-digit code. It expires in 10 minutes.
             </p>
           </header>
 

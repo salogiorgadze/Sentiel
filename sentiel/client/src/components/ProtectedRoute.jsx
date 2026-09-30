@@ -13,15 +13,15 @@ const ProtectedRoute = ({ children, role }) => {
 
     const response = await api.get("/api/auth/me");
 
-    console.log("GET ME SUCCESS:", response.status);
-    console.log("GET ME USER:", response.data);
+    console.log(response.status);
+    console.log(response.data);
 
     setUser(response.data);
 } catch (err) {
-    console.log("GET ME ERROR:", err);
-    console.log("STATUS:", err.response?.status);
-    console.log("DATA:", err.response?.data);
-    console.log("URL:", err.config?.url);
+    console.error(err);
+    console.error(err.response?.status);
+    console.error(err.response?.data);
+    console.error(err.config?.url);
 
     setUser(null);
 } finally {
