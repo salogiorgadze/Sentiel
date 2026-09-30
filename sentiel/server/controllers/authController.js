@@ -109,11 +109,11 @@ const loginUser = async (req, res) => {
     );
 
     res.cookie("token", accessToken, {
-      httpOnly: true, // Js ვერასდროს წაიკითხავს ამ cookieს
-      secure: process.env.NODE_ENV === "production", // true იქნება მხოლოდ httpsზე
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // იცავს CSRF შეტევებისგან
-      maxAge: 15 * 60 * 1000, //ქ cookieს არსებობა მილიწამებში
-    });
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 15 * 60 * 1000,
+});
 
     return res.status(200).json({
       message: "login successfully",
