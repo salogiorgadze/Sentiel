@@ -3,15 +3,15 @@ const sendMail = async ({ to, subject, html }) => {
   const timer = setTimeout(() => controller.abort(), 10000);
 
   try {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
       headers: {
-        "api-key": process.env.BREVO_API_KEY,
-        "content-type": "application/json",
-        accept: "application/json",
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+        accept: 'application/json',
       },
       body: JSON.stringify({
-        sender: { name: "Sentiel", email: process.env.MAIL_FROM },
+        sender: { name: 'Sentiel', email: process.env.MAIL_FROM },
         to: [{ email: to }],
         subject,
         htmlContent: html,

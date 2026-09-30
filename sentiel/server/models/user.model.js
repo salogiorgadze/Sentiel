@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,19 +20,19 @@ const userSchema = new mongoose.Schema(
     },
     authProvider: {
       type: String,
-      enum: ["local", "google"],
-      default: "local",
+      enum: ['local', 'google'],
+      default: 'local',
     },
     password: {
       type: String,
       required: function () {
-        return this.authProvider === "local";
+        return this.authProvider === 'local';
       },
     },
     role: {
       type: String,
       enum: ['student', 'admin'],
-      default: "student",
+      default: 'student',
     },
     isVerified: {
       type: Boolean,
@@ -54,8 +54,8 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return; // თუ არ შეცვლილა გადავიდეს შემდეგ ნაბიჯზე;
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return; // თუ არ შეცვლილა გადავიდეს შემდეგ ნაბიჯზე;
 
   try {
     this.password = await bcrypt.hash(this.password, 10);
@@ -70,4 +70,4 @@ userSchema.methods.comparePassword = async function (candidatePass) {
   return await bcrypt.compare(candidatePass, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);

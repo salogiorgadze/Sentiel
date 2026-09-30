@@ -1,5 +1,5 @@
-const Exam = require("../models/Exam.model");
-const ExamResult = require("../models/ExamResult.model");
+const Exam = require('../models/Exam.model');
+const ExamResult = require('../models/ExamResult.model');
 
 // CREATE EXAM
 const createExam = async (req, res) => {
@@ -14,7 +14,7 @@ const createExam = async (req, res) => {
 
     if (!title || !date) {
       return res.status(400).json({
-        message: "Title and date are required",
+        message: 'Title and date are required',
       });
     }
 
@@ -27,58 +27,53 @@ const createExam = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Exam created successfully",
+      message: 'Exam created successfully',
       exam,
     });
   } catch (err) {
-    console.log("CREATE EXAM ERROR:", err);
+    console.log('CREATE EXAM ERROR:', err);
 
     res.status(500).json({
-      message: "Failed to create exam",
+      message: 'Failed to create exam',
     });
   }
 };
 
-// GET ALL EXAMS
 const getExams = async (req, res) => {
   try {
     const exams = await Exam.find()
-      .populate("students", "fullname email")
+      .populate('students', 'fullname email')
       .sort({ date: 1 });
 
     res.status(200).json(exams);
   } catch (err) {
-    console.log("GET EXAMS ERROR:", err);
+    console.log('GET EXAMS ERROR:', err);
 
     res.status(500).json({
-      message: "Failed to get exams",
+      message: 'Failed to get exams',
     });
   }
 };
-
-// GET ONE EXAM
 const getExamById = async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id)
-      .populate("students", "fullname email");
+      .populate('students', 'fullname email');
 
     if (!exam) {
       return res.status(404).json({
-        message: "Exam not found",
+        message: 'Exam not found',
       });
     }
 
     res.status(200).json(exam);
   } catch (err) {
-    console.log("GET EXAM ERROR:", err);
-
+    console.error(err);
     res.status(500).json({
-      message: "Failed to get exam",
+      message: 'Failed to get exam',
     });
   }
 };
 
-// UPDATE EXAM
 const updateExam = async (req, res) => {
   try {
     const exam = await Exam.findByIdAndUpdate(
@@ -92,47 +87,45 @@ const updateExam = async (req, res) => {
 
     if (!exam) {
       return res.status(404).json({
-        message: "Exam not found",
+        message: 'Exam not found',
       });
     }
 
     res.status(200).json({
-      message: "Exam updated successfully",
+      message: 'Exam updated successfully',
       exam,
     });
   } catch (err) {
-    console.log("UPDATE EXAM ERROR:", err);
+    console.error(err);
 
     res.status(500).json({
-      message: "Failed to update exam",
+      message: 'Failed to update exam',
     });
   }
 };
 
-// DELETE EXAM
 const deleteExam = async (req, res) => {
   try {
     const exam = await Exam.findByIdAndDelete(req.params.id);
 
     if (!exam) {
       return res.status(404).json({
-        message: "Exam not found",
+        message: 'Exam not found',
       });
     }
 
-    // გამოცდასთან დაკავშირებული შედეგებიც წავშალოთ
+    // გამოცდასთან დაკავშირებული შედეგების წაშლა
     await ExamResult.deleteMany({
       examId: req.params.id,
     });
 
     res.status(200).json({
-      message: "Exam deleted successfully",
+      message: 'Exam deleted successfully',
     });
   } catch (err) {
-    console.log("DELETE EXAM ERROR:", err);
-
+    console.error(err);
     res.status(500).json({
-      message: "Failed to delete exam",
+      message: 'Failed to delete exam',
     });
   }
 };

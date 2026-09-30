@@ -63,8 +63,7 @@ authRouter.patch(
           message: "User not found",
         });
       }
-
-      // Cloudinary URL
+      // Cloudinary URL სადაც uploadს შევინახავ
       user.profilePicture = req.file.path;
 
       await user.save();

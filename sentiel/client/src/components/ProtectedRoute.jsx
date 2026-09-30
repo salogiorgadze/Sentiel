@@ -9,20 +9,15 @@ const ProtectedRoute = ({ children, role }) => {
   useEffect(() => {
     const getMe = async () => {
       try {
-    console.log("GETTING ME...");
-
     const response = await api.get("/api/auth/me");
-
     console.log(response.status);
     console.log(response.data);
-
     setUser(response.data);
 } catch (err) {
     console.error(err);
     console.error(err.response?.status);
     console.error(err.response?.data);
     console.error(err.config?.url);
-
     setUser(null);
 } finally {
     setLoading(false);
@@ -31,23 +26,18 @@ const ProtectedRoute = ({ children, role }) => {
 
     getMe();
   }, []);
-
   if (loading) {
     return <h1>Loading</h1>;
   }
-
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-
   if (role && user.role !== role) {
     if (user.role === "admin") {
       return <Navigate to="/admin" replace />;
     }
-
     return <Navigate to="/dashboard" replace />;
   }
-
   return children;
 };
 

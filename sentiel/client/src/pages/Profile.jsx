@@ -27,7 +27,7 @@ const Profile = () => {
 
         setProjects(projectsResponse.data);
       } catch (err) {
-        console.log('PROFILE ERROR:', err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const Profile = () => {
 
       toast.success('Profile picture updated!');
     } catch (err) {
-      console.log('UPLOAD ERROR:', err);
+      console.error(err);
 
       toast.error(
         err.response?.data?.message ||

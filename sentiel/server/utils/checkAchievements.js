@@ -34,8 +34,6 @@ const checkAchievements = async (studentId) => {
       user.achievements.push(...newAchievements);
 
       await user.save();
-
-      console.log(`New achievements for ${user.fullname}:`, newAchievements);
     }
   } catch (err) {
     console.error(err);

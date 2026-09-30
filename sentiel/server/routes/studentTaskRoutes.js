@@ -7,28 +7,28 @@ const studentTaskRouter = express.Router();
 
 
 studentTaskRouter.get(
-  "/student/:studentId",
+  '/student/:studentId',
   protect,
   adminOnly,
   getStudentTasks
 );
 
 studentTaskRouter.post(
-  "/student/:studentId",
+  '/student/:studentId',
   protect,
   adminOnly,
   createStudentTask
 );
 
 studentTaskRouter.patch(
-  "/:taskId",
+  '/:taskId',
   protect,
   adminOnly,
   updateStudentTask
 );
 
 studentTaskRouter.delete(
-  "/:taskId",
+  '/:taskId',
   protect,
   adminOnly,
   deleteStudentTask

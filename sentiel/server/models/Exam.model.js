@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const examSchema = new mongoose.Schema(
   {
@@ -10,7 +10,7 @@ const examSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      default: "",
+      default: '',
     },
 
     topics: {
@@ -26,14 +26,14 @@ const examSchema = new mongoose.Schema(
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
 
     status: {
       type: String,
-      enum: ["upcoming", "completed"],
-      default: "upcoming",
+      enum: ['upcoming', 'completed'],
+      default: 'upcoming',
     },
   },
   {
@@ -41,4 +41,4 @@ const examSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Exam", examSchema);
+module.exports = mongoose.model('Exam', examSchema);

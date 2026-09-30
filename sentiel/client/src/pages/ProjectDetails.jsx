@@ -94,7 +94,7 @@ const ProjectDetails = () => {
     }
   };
 
-  // დამხმარე ფუნქცია თასქების სტატუსის მიხედვით გასაფილტრად
+  // დამხმარე ფუნქცია taskების სტატუსის მიხედვით გასაფილტრად
   const filterTasksByStatus = (status) => {
     return tasks.filter((task) => task.status === status);
   };

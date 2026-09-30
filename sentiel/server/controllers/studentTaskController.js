@@ -1,5 +1,5 @@
-const StudentTask = require("../models/StudentTask.model");
-const User = require("../models/user.model");
+const StudentTask = require('../models/StudentTask.model');
+const User = require('../models/user.model');
 
 const getStudentTasks = async (req, res) => {
   try {
@@ -9,7 +9,7 @@ const getStudentTasks = async (req, res) => {
 
     if (!student) {
       return res.status(404).json({
-        message: "Student not found",
+        message: 'Student not found',
       });
     }
 
@@ -19,10 +19,10 @@ const getStudentTasks = async (req, res) => {
 
     return res.status(200).json(tasks);
   } catch (err) {
-    console.log("GET STUDENT TASKS ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 };
@@ -36,7 +36,7 @@ const createStudentTask = async (req, res) => {
 
     if (!student) {
       return res.status(404).json({
-        message: "Student not found",
+        message: 'Student not found',
       });
     }
 
@@ -50,10 +50,10 @@ const createStudentTask = async (req, res) => {
 
     return res.status(201).json(task);
   } catch (err) {
-    console.log("CREATE STUDENT TASK ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 };
@@ -66,7 +66,7 @@ const updateStudentTask = async (req, res) => {
 
     if (!task) {
       return res.status(404).json({
-        message: "Task not found",
+        message: 'Task not found',
       });
     }
 
@@ -82,15 +82,14 @@ const updateStudentTask = async (req, res) => {
 
     return res.status(200).json(task);
   } catch (err) {
-    console.log("UPDATE STUDENT TASK ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 };
 
-// DELETE task
 const deleteStudentTask = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -99,20 +98,20 @@ const deleteStudentTask = async (req, res) => {
 
     if (!task) {
       return res.status(404).json({
-        message: "Task not found",
+        message: 'Task not found',
       });
     }
 
     await task.deleteOne();
 
     return res.status(200).json({
-      message: "Task deleted successfully",
+      message: 'Task deleted successfully',
     });
   } catch (err) {
-    console.log("DELETE STUDENT TASK ERROR:", err);
+    console.error(err);
 
     return res.status(500).json({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 };

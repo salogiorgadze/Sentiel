@@ -1,7 +1,7 @@
-const Exam = require("../models/Exam.model");
-const ExamResult = require("../models/ExamResult.model");
+const Exam = require('../models/Exam.model');
+const ExamResult = require('../models/ExamResult.model');
 
-// STUDENT EXAMS
+
 const getMyExams = async (req, res) => {
   try {
     const exams = await Exam.find({
@@ -37,34 +37,32 @@ const getMyExams = async (req, res) => {
 
     res.status(200).json(examsWithResults);
   } catch (err) {
-    console.log("GET MY EXAMS ERROR:", err);
-
+    console.error(err);
     res.status(500).json({
-      message: "Failed to get exams",
+      message: 'Failed to get exams',
     });
   }
 };
 
-// GET ONE STUDENT'S RESULT
 const getMyExamResult = async (req, res) => {
   try {
     const result = await ExamResult.findOne({
       examId: req.params.id,
       studentId: req.user.id,
-    }).populate("examId", "title date topics");
+    }).populate('examId', 'title date topics');
 
     if (!result) {
       return res.status(404).json({
-        message: "Result not found",
+        message: 'Result not found',
       });
     }
 
     res.status(200).json(result);
   } catch (err) {
-    console.log("GET MY EXAM RESULT ERROR:", err);
+    console.error(err);
 
     res.status(500).json({
-      message: "Failed to get exam result",
+      message: 'Failed to get exam result',
     });
   }
 };

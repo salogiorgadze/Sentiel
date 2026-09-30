@@ -1,16 +1,16 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const examResultSchema = new mongoose.Schema(
   {
     examId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Exam",
+      ref: 'Exam',
       required: true,
     },
 
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
 
@@ -26,12 +26,12 @@ const examResultSchema = new mongoose.Schema(
 
     feedback: {
       type: String,
-      default: "",
+      default: '',
     },
 
     status: {
       type: String,
-      enum: ["passed", "failed"],
+      enum: ['passed', 'failed'],
       required: true,
     },
   },
@@ -45,4 +45,4 @@ examResultSchema.index(
   { unique: true }
 );
 
-module.exports = mongoose.model("ExamResult", examResultSchema);
+module.exports = mongoose.model('ExamResult', examResultSchema);

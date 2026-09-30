@@ -7,16 +7,16 @@ const checkAchievements = require('../utils/checkAchievements');
 const studentProjectRouter = express.Router();
 
 studentProjectRouter.get(
-  "/student/:studentId",
+  '/student/:studentId',
   protect,
   async (req, res) => {
     try {
       if (
-        req.user.role !== "admin" &&
+        req.user.role !== 'admin' &&
         req.user.id !== req.params.studentId
       ) {
         return res.status(403).json({
-          message: "Access denied",
+          message: 'Access denied',
         });
       }
 
@@ -27,10 +27,10 @@ studentProjectRouter.get(
       res.status(200).json(projects);
 
     } catch (err) {
-      console.error("GET PROJECTS ERROR:", err);
+      console.error('GET PROJECTS ERROR:', err);
 
       res.status(500).json({
-        message: "Internal server error",
+        message: 'Internal server error',
       });
     }
   }
@@ -50,7 +50,7 @@ studentProjectRouter.post('/student/:studentId', protect, adminOnly, async (req,
       await checkAchievements(studentId);
 
       res.status(201).json({
-        message: "Project added successfully",
+        message: 'Project added successfully',
         project,
       });
     } catch(err) {
@@ -62,7 +62,7 @@ studentProjectRouter.post('/student/:studentId', protect, adminOnly, async (req,
 });
 
 studentProjectRouter.delete(
-  "/:projectId",
+  '/:projectId',
   protect,
   adminOnly,
   async (req, res) => {
@@ -73,37 +73,37 @@ studentProjectRouter.delete(
 
       if (!project) {
         return res.status(404).json({
-          message: "Project not found",
+          message: 'Project not found',
         });
       }
 
       await project.deleteOne();
 
       res.status(200).json({
-        message: "Project deleted successfully",
+        message: 'Project deleted successfully',
       });
 
     } catch (err) {
-      console.error("DELETE PROJECT ERROR:", err);
+      console.error('DELETE PROJECT ERROR:', err);
 
       res.status(500).json({
-        message: "Internal server error",
+        message: 'Internal server error',
       });
     }
   }
 );
 
 studentProjectRouter.get(
-  "/ranking",
+  '/ranking',
   protect,
   async (req, res) => {
     try {
       const ranking = await StudentProject.aggregate([
         {
           $group: {
-            _id: "$studentId",
+            _id: '$studentId',
             xp: {
-              $sum: "$score",
+              $sum: '$score',
             },
           },
         },
@@ -116,28 +116,28 @@ studentProjectRouter.get(
 
         {
           $lookup: {
-            from: "users",
-            localField: "_id",
-            foreignField: "_id",
-            as: "student",
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'student',
           },
         },
 
         {
-          $unwind: "$student",
+          $unwind: '$student',
         },
 
         {
           $match: {
-            "student.role": "student",
+            'student.role': 'student',
           },
         },
 
         {
           $project: {
-            _id: "$student._id",
-            fullname: "$student.fullname",
-            email: "$student.email",
+            _id: '$student._id',
+            fullname: '$student.fullname',
+            email: '$student.email',
             xp: 1,
           },
         },
@@ -145,10 +145,10 @@ studentProjectRouter.get(
 
       res.status(200).json(ranking);
     } catch (err) {
-      console.error("GET RANKING ERROR:", err);
+      console.error('GET RANKING ERROR:', err);
 
       res.status(500).json({
-        message: "Internal server error",
+        message: 'Internal server error',
       });
     }
   }

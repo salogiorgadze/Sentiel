@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const studentTaskSchema = new mongoose.Schema(
   {
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
 
@@ -16,19 +16,19 @@ const studentTaskSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      default: "",
+      default: '',
     },
 
     priority: {
       type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
+      enum: ['low', 'medium', 'high'],
+      default: 'medium',
     },
 
     status: {
       type: String,
-      enum: ["pending", "in-progress", "completed"],
-      default: "pending",
+      enum: ['pending', 'in-progress', 'completed'],
+      default: 'pending',
     },
 
     deadline: {
@@ -37,7 +37,7 @@ const studentTaskSchema = new mongoose.Schema(
 
     note: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   {
@@ -45,4 +45,4 @@ const studentTaskSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("StudentTask", studentTaskSchema);
+module.exports = mongoose.model('StudentTask', studentTaskSchema);

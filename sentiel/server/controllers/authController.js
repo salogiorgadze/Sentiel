@@ -9,16 +9,11 @@ const sendMail = require("../utils/mailer");
 
 const registerUser = async (req, res) => {
 
-    console.log("REGISTER CONTROLLER REACHED");
-
     try {
         const { fullname, email, password } = req.body;
 
-        console.log("1. REGISTER START");
 
         const isExist = await User.findOne({ email });
-
-        console.log("2. USER CHECKED");
 
         if (isExist) {
             return res.status(400).json({
@@ -33,8 +28,6 @@ const registerUser = async (req, res) => {
                 emailDomain === domain ||
                 emailDomain.endsWith("." + domain)
         );
-
-        console.log("3. EMAIL VALIDATED");
 
         if (isDisponsable) {
             return res.status(400).json({
@@ -55,9 +48,6 @@ const registerUser = async (req, res) => {
         });
 
         await newUser.save();
-
-        console.log("4. USER SAVED");
-
         try {
             await sendMail({
                 to: email,
@@ -68,7 +58,7 @@ const registerUser = async (req, res) => {
                 `,
             });
         } catch (err) {
-            console.log("MAIL ERROR:", err.message);
+            console.error(err.message);
             await User.deleteOne({ _id: newUser._id });
 
             return res.status(500).json({
@@ -244,7 +234,7 @@ const googleAuthCallback = (req, res) => {
         );
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
 
         return res.status(500).json({
             message: "invalid server"
